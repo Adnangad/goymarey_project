@@ -28,28 +28,44 @@ model User {
   followedBy    Follows[] @relation("followedBy")
   following     Follows[] @relation("following")
   posts         Posts[]
+  Like          Like[]
 }
 
 model Follows {
-  followedBy   User @relation("followedBy", fields: [followedById], references: [id], onDelete: Cascade)
+  followedBy User @relation("followedBy", fields: [followedById], references: [id], onDelete: Cascade)
 
   // followedById: the users id that is following ie who is following
   followedById Int
 
-  following    User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+  following User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
 
   // followingId: the users id that is followed ie who is being followed
-  followingId  Int
+  followingId Int
 
   @@id([followingId, followedById])
 }
 
 model Posts {
-  id         Int      @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   user_id    Int
   content    String
-  likes      Int      @default(0)
-  created_at DateTime @default(now())
-  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  likes      Int       @default(0)
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+  edited     Boolean   @default(false)
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  Like       Like[]
+
   @@index([user_id])
+}
+
+model Like {
+  id      Int     @id @default(autoincrement())
+  user_id Int
+  liked   Boolean @default(false)
+  post_id Int
+  post    Posts   @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, post_id], name: "user_id_post_id")
 }

@@ -29,7 +29,8 @@ const create_user = async (name, email, password, date_of_birth, gender) => {
         });
         return user;
     } catch (error) {
-        throw CustomError("A user with the username/email already exists");
+        console.log(error);
+        throw new CustomError("A user with the username/email already exists");
     }
 }
 
@@ -55,9 +56,9 @@ const delete_user = async (email, password) => {
     try {
         const user = await check_user(email, password);
         if (user) {
-            prisma.user.delete({
+            await prisma.user.delete({
                 where: {
-                    id: user.id,
+                    id: parseInt(user.id),
                 }
             });
             return "Success";

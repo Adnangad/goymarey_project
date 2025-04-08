@@ -1,4 +1,4 @@
-import { get_users, get_user_by_id, create_user, check_user, delete_user, follow_smn, get_followers, get_following, unfollow_smn } from "./prisma_functions.js";
+import { get_users, get_user_by_id, create_user, check_user, delete_user, follow_smn, get_followers, get_following, unfollow_smn } from "./user_functions.js";
 import { GraphQLError } from "graphql";
 
 

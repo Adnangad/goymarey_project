@@ -32,8 +32,13 @@ model User {
 
 model Follows {
   followedBy   User @relation("followedBy", fields: [followedById], references: [id], onDelete: Cascade)
+
+  // followedById: the users id that is following ie who is following
   followedById Int
+
   following    User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  // followingId: the users id that is followed ie who is being followed
   followingId  Int
 
   @@id([followingId, followedById])

@@ -1,12 +1,13 @@
 async function test_apis() {
     const url = "http://localhost:4000/graphql";
     const query = `
-        mutation {
-        deleteUser(email: "obuya@gmail.com", password: "somepassword") {
-          success
-          message
+        query {
+          following(user_id: "2") {
+            id
+            name
+            email
+          }
         }
-      }
     `;
     const response = await fetch(url, {
         method: "POST",

@@ -5,7 +5,7 @@ import root from "./paths.js";
 
 const schema = buildSchema(`
     scalar DateTime
-    type DeleteResponse {
+    type MessageResponse {
         success: Boolean!
         message: String!
     }
@@ -22,10 +22,14 @@ const schema = buildSchema(`
         users: [User]
         user(id: ID!): User
         login(email: String!, password: String!): User
+        followers(user_id: ID!): [User]
+        following(user_id: ID!): [User]
     }
     type Mutation {
         createUser(name:String, email:String, password:String, date_of_birth:DateTime, gender:String): User
-        deleteUser(email:String, password:String): DeleteResponse
+        deleteUser(email:String, password:String): MessageResponse
+        follow(user_id: ID!, follow_id: ID!): MessageResponse
+        unfollow(user_id:ID!, unfollow_id: ID!): MessageResponse
     }
     `);
 

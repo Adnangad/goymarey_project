@@ -24,9 +24,9 @@ const root = {
         return usr;
     },
     // creates a user
-    createUser: async ({ name, email, password, date_of_birth, gender }) => {
+    createUser: async ({ name, email, password, date_of_birth, gender, imageUrl }) => {
         try {
-            return await create_user(name, email, password, date_of_birth, gender);
+            return await create_user(name, email, password, date_of_birth, gender, imageUrl);
         } catch (error) {
             throw new GraphQLError(`${error}`, {
                 extensions: {

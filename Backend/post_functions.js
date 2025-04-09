@@ -7,8 +7,28 @@ const prisma = new PrismaClient();
 //retreives all posts
 const get_posts = async () => {
     try {
-        const posts = await prisma.posts.findMany();
-        return posts;
+        const posts = await prisma.posts.findMany({
+            include: {
+                user: {
+                    select: {
+                        name: true,
+                        imageUrl: true,
+                    }
+                },
+                _count: {
+                    select: {
+                        Like: true,
+                    }
+                }
+            },
+            orderBy: {
+                created_at: 'desc',
+            }
+        });
+        return posts.map(post => ({
+            ...post,
+            likes: post._count.Like
+        }));
     } catch (error) {
         throw new GraphQLError(`${error}`, {
             extensions: {
@@ -204,10 +224,23 @@ const get_following_posts = async (user_id) => {
             const following = followingz.map(f => f.following);
             const posts = await prisma.posts.findMany({
                 where: {
-                    user_id: {in: following.map(f => f.id)},
+                    user_id: { in: following.map(f => f.id) },
+                }, include: {
+                    user: true,
+                    _count: {
+                        select: {
+                            Like: true,
+                        }
+                    }
+                },
+                orderBy: {
+                    created_at: 'desc',
                 }
             });
-            return posts;
+            return posts.map(post => ({
+                ...post,
+                likes: post._count.Like
+            }));;
         }
         else {
             const er = new CustomError("User not found");

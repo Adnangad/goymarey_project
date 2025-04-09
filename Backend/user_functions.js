@@ -14,17 +14,29 @@ const get_user_by_id = async (id) => {
     const user = await prisma.user.findUnique({
         where: {
             id: parseInt(id),
-        }
+        },
+        include: {
+            _count: {
+                select: {
+                    followedBy: true,
+                    following: true,
+                },
+            },
+        },
     });
-    return user;
+    return {
+        ...user,
+        followersCount: user._count.following,
+        followingCount: user._count.followedBy,
+    };
 }
 
 //creates a user in the db
-const create_user = async (name, email, password, date_of_birth, gender) => {
+const create_user = async (name, email, password, date_of_birth, gender, imageUrl) => {
     try {
         const user = await prisma.user.create({
             data: {
-                name, email, password, date_of_birth, gender
+                name, email, password, date_of_birth, gender, imageUrl
             }
         });
         return user;

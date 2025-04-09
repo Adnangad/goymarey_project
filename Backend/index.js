@@ -2,12 +2,16 @@ import express from "express";
 import { graphqlHTTP } from "express-graphql";
 import { buildSchema } from "graphql";
 import root from "./paths.js";
+import cors from "cors";
 
 const schema = buildSchema(`
     scalar DateTime
     type MessageResponse {
         success: Boolean!
         message: String!
+    }
+    type PostCount {
+        Like: Int!
     }
 
     type User {
@@ -18,6 +22,9 @@ const schema = buildSchema(`
         date_of_birth: DateTime
         gender: String
         imageUrl: String
+        followersCount: Int
+        followingCount: Int
+        posts: [Posts]
     }
     type Posts {
         id: ID!
@@ -27,6 +34,8 @@ const schema = buildSchema(`
         updated_at: DateTime!
         edited: Boolean!
         user_id: Int
+        user: User!
+        _count: PostCount
     }
     type Like {
         id: ID
@@ -49,7 +58,7 @@ const schema = buildSchema(`
         
     }
     type Mutation {
-        createUser(name:String, email:String, password:String, date_of_birth:DateTime, gender:String): User
+        createUser(name:String, email:String, password:String, date_of_birth:DateTime, gender:String, imageUrl:String): User
         deleteUser(email:String, password:String): MessageResponse
         follow(user_id: ID!, follow_id: ID!): MessageResponse
         unfollow(user_id:ID!, unfollow_id: ID!): MessageResponse
@@ -62,6 +71,7 @@ const schema = buildSchema(`
     `);
 
 const app = express();
+app.use(cors({ origin: "http://localhost:5173" }));
 app.use("/graphql", graphqlHTTP({
     schema,
     rootValue: root,

@@ -44,6 +44,16 @@ const like_post = async (post_id, user_id) => {
                 liked: true
             }
         });
+        await prisma.posts.update({
+            where: {
+                id: parseInt(post_id),
+            },
+            data: {
+                likes: {
+                    increment: 1
+                }
+            }
+        })
         return {
             success: true,
             message: "Successfully liked the post"

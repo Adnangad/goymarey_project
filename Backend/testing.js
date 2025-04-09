@@ -1,11 +1,10 @@
 async function test_apis() {
     const url = "http://localhost:4000/graphql";
     const query = `
-        query {
-          likedBy(post_id: "5") {
-            email
-            name
-            id
+        mutation {
+          follow(user_id: "10", follow_id: "7") {
+            success
+            message
           }
         }
     `;

@@ -25,6 +25,7 @@ model User {
   password      String
   date_of_birth DateTime
   gender        Gender
+  imageUrl      String?
   followedBy    Follows[] @relation("followedBy")
   following     Follows[] @relation("following")
   posts         Posts[]

@@ -11,12 +11,13 @@ const schema = buildSchema(`
     }
 
     type User {
-        id: ID!
-        name: String!
-        email: String!
-        password: String!
-        date_of_birth: DateTime!
-        gender: String!
+        id: ID
+        name: String
+        email: String
+        password: String
+        date_of_birth: DateTime
+        gender: String
+        imageUrl: String
     }
     type Posts {
         id: ID!

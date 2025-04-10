@@ -265,15 +265,13 @@ function Home() {
                                 {all_posts.map((post) => (
                                     <li key={post.id} className="border-b pb-4 flex items-start space-x-4">
                                         <div className="flex-shrink-0">
-                                            {post.user.imageUrl ? (
+                                            {post.user.imageUrl && (
                                                 <Link to={`/profile/${post.user.id}`}>
-                                                    <img src={post.user.imageUrl} alt={`${post.user.name}'s profile`} className="w-12 h-12 rounded-full object-cover" />
-                                                </Link>
-                                            ) : (
-                                                <Link to={`/profile/${post.user.id}`}>
-                                                    <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-white">
-                                                        {post.user.name[0]}
-                                                    </div>
+                                                    <img
+                                                        src={post.user.imageUrl}
+                                                        alt={`${post.user.name}'s profile`}
+                                                        className="w-12 h-12 rounded-full object-cover"
+                                                    />
                                                 </Link>
                                             )}
                                         </div>
@@ -298,15 +296,13 @@ function Home() {
                                 {following_posts.map((post) => (
                                     <li key={post.id} className="border-b pb-4 flex items-start space-x-4">
                                         <div className="flex-shrink-0">
-                                            {post.user.imageUrl ? (
+                                            {post.user.imageUrl && (
                                                 <Link to={`/profile/${post.user.id}`}>
-                                                    <img src={post.user.imageUrl} alt={`${post.user.name}'s profile`} className="w-12 h-12 rounded-full object-cover" />
-                                                </Link>
-                                            ) : (
-                                                <Link to={`/profile/${post.user.id}`}>
-                                                    <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-white">
-                                                        {post.user.name[0]}
-                                                    </div>
+                                                    <img
+                                                        src={post.user.imageUrl}
+                                                        alt={`${post.user.name}'s profile`}
+                                                        className="w-12 h-12 rounded-full object-cover"
+                                                    />
                                                 </Link>
                                             )}
                                         </div>

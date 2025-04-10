@@ -2,12 +2,11 @@ async function test_apis() {
     const url = "http://localhost:4000/graphql";
     const query = `
         query {
-          user(id: "8") {
+          user(id: "7") {
             id
             name
             email
-            followersCount
-            followingCount
+            imageUrl
           }
         }
     `;

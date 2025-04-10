@@ -64,7 +64,7 @@ const schema = buildSchema(`
         unfollow(user_id:ID!, unfollow_id: ID!): MessageResponse
         createPost(content:String, user_id: ID): Posts
         updatePost(post_id: ID, content: String): Posts
-        updateUser(user_id: ID, name:String, imageUrl:String): MessageResponse
+        updateUser(user_id: ID, name:String, imageUrl:String): User
         deletePost(post_id:ID): MessageResponse
         like(post_id:ID, user_id:ID): MessageResponse
         unlike(post_id:ID, user_id:ID): MessageResponse
@@ -72,7 +72,9 @@ const schema = buildSchema(`
     `);
 
 const app = express();
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({
+    origin: ['http://localhost:5173', 'http://localhost:5174'],
+}));
 app.use("/graphql", graphqlHTTP({
     schema,
     rootValue: root,

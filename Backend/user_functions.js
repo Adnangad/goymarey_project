@@ -78,10 +78,7 @@ const update_user = async (user_id, name, imageurl) => {
                     imageUrl: imageurl,
                 }
             });
-            return {
-                success: true,
-                message: "Successfully unliked the post"
-            }
+            return await get_user_by_id(user.id);
         }
     } catch (error) {
         console.log("error");

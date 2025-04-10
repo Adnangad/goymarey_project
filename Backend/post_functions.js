@@ -226,7 +226,7 @@ const get_following_posts = async (user_id) => {
                 },
             });
 
-            const followingIds = followingz.map(f => f.followingId); // Get the list of following user IDs
+            const followingIds = followingz.map(f => f.followingId);
             const posts = await prisma.posts.findMany({
                 where: {
                     user_id: { in: followingIds },

@@ -62,7 +62,7 @@ export default function Settings() {
                 uploadedImageUrl = res.data.secure_url;
             }
 
-            const url = "https://goymarey-project.onrender.com/graphql";
+            const url = "https://goymarey-project.onrender.com/graphql";;
             const query = `
                 mutation {
                     updateUser(user_id: "${user?.id}", name: "${username}", imageUrl: "${uploadedImageUrl}"){
@@ -87,6 +87,7 @@ export default function Settings() {
             if (rez.errors) {
                 setErrorMessage("Error: " + rez.errors[0]?.message || "Something went wrong.");
             } else {
+                console.log(rez.data.updateUser);
                 setProfileImage(rez.data.updateUser.imageUrl); 
             }
 
@@ -98,7 +99,7 @@ export default function Settings() {
 
     const handleDeleteAccount = async () => {
         try {
-            const url = "https://goymarey-project.onrender.com/graphql";
+            const url = "https://goymarey-project.onrender.com/graphql";;
             const query = `
                     mutation {
                         deleteUser(email: "${email}", password: "${password}"){

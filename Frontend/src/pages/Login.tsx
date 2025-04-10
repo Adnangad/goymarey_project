@@ -60,7 +60,7 @@ function Login() {
                         <a href='#'>
                             <img src={logo} alt='logo' className='w-44 inline-block rounded-full'></img>
                         </a>
-                        <h3 className='text-slate-800  mt-6 text-xl'>Sign Up for an Account</h3>
+                        <h3 className='text-slate-800  mt-6 text-xl'>Login To Your Account</h3>
                     </div>
                     <form onSubmit={login}>
                         <div className='grid sm:grid-cols-2 gap-8'>

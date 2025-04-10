@@ -71,7 +71,7 @@ function App() {
         setShowError(true)
       } else {
         console.log("Success:", rez.data);
-        sessionStorage.setItem('user_data', JSON.stringify(rez.data));
+        sessionStorage.setItem('user_data', JSON.stringify(rez.data.createUser));
         navigate("/home");
       }
     } catch (err) {

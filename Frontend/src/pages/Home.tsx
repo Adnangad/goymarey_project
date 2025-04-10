@@ -32,6 +32,7 @@ function Home() {
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(true);
     const user = JSON.parse(sessionStorage.getItem('user_data') || '{}');
+    console.log(user);
 
     async function handleLikeChange(postid: number, userid: number) {
         try {

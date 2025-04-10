@@ -3,9 +3,9 @@
 
 A full-stack social media feed application built with **React**, **TypeScript**, **Tailwind CSS**, **Node.js**, **Express**, **GraphQL**, **Prisma**, and **PostgreSQL**. Users can sign up, log in, post updates, like posts, follow/unfollow other users, and manage their profiles.
 
-## 🔗 Live Demo
+## Live Demo
 
-[Live Application Link](#)  
+['https://goymarey-project.vercel.app/'](#)  
 
 ---
 

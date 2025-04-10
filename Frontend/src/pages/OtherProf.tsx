@@ -37,7 +37,7 @@ export default function OtherProf() {
 
     async function unfollow(person_id: Number) {
         try {
-            const url = "http://localhost:4000/graphql";
+            const url = "https://goymarey-project.onrender.com/graphql";
             const query = `
                 mutation {
                     unfollow(user_id: "${user.id}", unfollow_id: "${person_id}") {
@@ -67,7 +67,7 @@ export default function OtherProf() {
     }
     async function follow(person_id: Number) {
         try {
-            const url = "http://localhost:4000/graphql";
+            const url = "https://goymarey-project.onrender.com/graphql";
             const query = `
                 mutation {
                     follow(user_id: "${user.id}", follow_id: "${person_id}") {
@@ -98,7 +98,7 @@ export default function OtherProf() {
     useEffect(() => {
         async function getMyposts() {
             try {
-                const url = "http://localhost:4000/graphql";
+                const url = "https://goymarey-project.onrender.com/graphql";
                 const query = `
                     query {
                         postsByUser(user_id: "${profId}") {
@@ -130,7 +130,7 @@ export default function OtherProf() {
         }
         async function getfollowers() {
             try {
-                const url = "http://localhost:4000/graphql";
+                const url = "https://goymarey-project.onrender.com/graphql";
                 const query = `
                     query {
                         followers(user_id: "${profId}") {
@@ -165,7 +165,7 @@ export default function OtherProf() {
         }
         async function getfollowing() {
             try {
-                const url = "http://localhost:4000/graphql";
+                const url = "https://goymarey-project.onrender.com/graphql";
                 const query = `
                     query {
                         following(user_id: "${profId}") {
@@ -198,7 +198,7 @@ export default function OtherProf() {
         }
         async function getInfo() {
             try {
-                const url = "http://localhost:4000/graphql";
+                const url = "https://goymarey-project.onrender.com/graphql";
                 const query = `
                     query {
                         user(id: "${profId}"){
@@ -234,7 +234,7 @@ export default function OtherProf() {
         }
         async function get_users_following() {
             try {
-                const url = "http://localhost:4000/graphql";
+                const url = "https://goymarey-project.onrender.com/graphql";
                 const query = `
                 query {
                   following(user_id: "${user.id}") {

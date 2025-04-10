@@ -42,7 +42,7 @@ function Profile() {
 
     async function deletePost(post_id: Number) {
         try {
-            const url = "http://localhost:4000/graphql";
+            const url = "https://goymarey-project.onrender.com/graphql";
             const query = `
                 mutation {
                     deletePost(post_id: "${post_id}") {
@@ -71,7 +71,7 @@ function Profile() {
     }
     async function unfollow(person_id: Number) {
         try {
-            const url = "http://localhost:4000/graphql";
+            const url = "https://goymarey-project.onrender.com/graphql";
             const query = `
                 mutation {
                     unfollow(user_id: "${user.id}", unfollow_id: "${person_id}") {
@@ -101,7 +101,7 @@ function Profile() {
     }
     async function follow(person_id: Number) {
         try {
-            const url = "http://localhost:4000/graphql";
+            const url = "https://goymarey-project.onrender.com/graphql";
             const query = `
                 mutation {
                     follow(user_id: "${user.id}", follow_id: "${person_id}") {
@@ -133,7 +133,7 @@ function Profile() {
     useEffect(() => {
         async function getInfo() {
             try {
-                const url = "http://localhost:4000/graphql";
+                const url = "https://goymarey-project.onrender.com/graphql";
                 const query = `
                     query {
                         user(id: "${profId}"){
@@ -170,7 +170,7 @@ function Profile() {
         async function getMyposts() {
             try {
                 setLoading(true);
-                const url = "http://localhost:4000/graphql";
+                const url = "https://goymarey-project.onrender.com/graphql";
                 const query = `
                     query {
                         postsByUser(user_id: "${profId}") {
@@ -205,7 +205,7 @@ function Profile() {
         async function getfollowers() {
             try {
                 setLoading(true);
-                const url = "http://localhost:4000/graphql";
+                const url = "https://goymarey-project.onrender.com/graphql";
                 const query = `
                     query {
                         followers(user_id: "${profId}") {
@@ -243,7 +243,7 @@ function Profile() {
         async function getfollowing() {
             try {
                 setLoading(true);
-                const url = "http://localhost:4000/graphql";
+                const url = "https://goymarey-project.onrender.com/graphql";
                 const query = `
                     query {
                         following(user_id: "${profId}") {
@@ -278,7 +278,7 @@ function Profile() {
         }
         async function otherUsers() {
             try {
-                const url = "http://localhost:4000/graphql";
+                const url = "https://goymarey-project.onrender.com/graphql";
                 const query = `
                     query {
                         users {

@@ -35,7 +35,7 @@ function Home() {
 
     async function handleLikeChange(postid: number, userid: number) {
         try {
-            const url = "http://localhost:4000/graphql";
+            const url = "https://goymarey-project.onrender.com/graphql";
             const query = `
                 mutation {
                     like(post_id: "${postid}", user_id: "${userid}") {
@@ -71,7 +71,7 @@ function Home() {
                 alert("Post must not be empty");
                 return;
             }
-            const url = "http://localhost:4000/graphql";
+            const url = "https://goymarey-project.onrender.com/graphql";
             const query = `
                 mutation {
                     createPost(content: "${contents}", user_id: "${user.id}") {
@@ -104,7 +104,7 @@ function Home() {
         setLoading(true);
         async function getAllPost() {
             try {
-                const url = "http://localhost:4000/graphql";
+                const url = "https://goymarey-project.onrender.com/graphql";
                 const query = `
                     query {
                         posts {
@@ -144,7 +144,7 @@ function Home() {
 
         async function getFollow() {
             try {
-                const url = "http://localhost:4000/graphql";
+                const url = "https://goymarey-project.onrender.com/graphql";
                 const query = `
                     query {
                         postsByFollowing(user_id: "${user.id}"){

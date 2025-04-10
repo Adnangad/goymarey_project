@@ -39,7 +39,7 @@ function App() {
     }
   };
   async function register(e: React.FormEvent<HTMLFormElement>) {
-    const url = "http://localhost:4000/graphql";
+    const url = "https://goymarey-project.onrender.com/graphql";
     e.preventDefault();
     if (confpass !== password) {
       setErrorMessage("Passwords do not match");

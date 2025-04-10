@@ -10,7 +10,7 @@ function Login() {
     const [password, setPassword] = useState('');
     const [showError, setShowError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const login_url = "http://localhost:4000/graphql";
+    const login_url = "https://goymarey-project.onrender.com/graphql";
     const navigate = useNavigate();
 
     async function login(e: React.FormEvent<HTMLFormElement>) {

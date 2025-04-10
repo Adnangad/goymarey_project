@@ -78,7 +78,7 @@ app.use(cors({
         'http://localhost:5174',
         'https://goymarey-project.vercel.app',
         'https://goymarey-project.onrender.com',
-        'https://goymarey-project-frontend.onrender.com/'
+        'https://goymarey-project-frontend.onrender.com'
     ],
 }));
 app.use("/graphql", graphqlHTTP({

@@ -73,7 +73,7 @@ const schema = buildSchema(`
 
 const app = express();
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    origin: ['http://localhost:5173', 'http://localhost:5174', 'https://goymarey-project.vercel.app'],
 }));
 app.use("/graphql", graphqlHTTP({
     schema,

@@ -1,8 +1,8 @@
 async function test_apis() {
-    const url = "http://localhost:4000/graphql";
+    const url = "https://goymarey-project.onrender.com/graphql";
     const query = `
         query {
-          user(id: "7") {
+          users{
             id
             name
             email
@@ -20,7 +20,7 @@ async function test_apis() {
       console.error(rez.errors);
     }
     else {
-      console.log(`The rez is: `, rez.data.user);
+      console.log(`The rez is: `, rez.data.users);
     }
 }
 test_apis();

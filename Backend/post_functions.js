@@ -211,23 +211,27 @@ const delete_post = async (post_id) => {
 //get posts from people the user is following
 const get_following_posts = async (user_id) => {
     try {
-        const user = prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: {
                 id: parseInt(user_id),
             }
         });
         if (user) {
             const followingz = await prisma.follows.findMany({
-                where: { followedById: parseInt(user_id) },
+                where: {
+                    followedById: parseInt(user_id),
+                },
                 include: {
                     following: true,
                 },
             });
-            const following = followingz.map(f => f.following);
+
+            const followingIds = followingz.map(f => f.followingId); // Get the list of following user IDs
             const posts = await prisma.posts.findMany({
                 where: {
-                    user_id: { in: following.map(f => f.id) },
-                }, include: {
+                    user_id: { in: followingIds },
+                },
+                include: {
                     user: true,
                     _count: {
                         select: {
@@ -242,16 +246,9 @@ const get_following_posts = async (user_id) => {
             return posts.map(post => ({
                 ...post,
                 likes: post._count.Like
-            }));;
-        }
-        else {
-            const er = new CustomError("User not found");
-            throw new GraphQLError(`${er}`, {
-                extensions: {
-                    code: "UNABLE_TO_GET_POSTS",
-                    http: { status: 403 }
-                }
-            })
+            }));
+        } else {
+            throw new CustomError("User not found");
         }
     } catch (error) {
         console.log("error");
@@ -263,6 +260,7 @@ const get_following_posts = async (user_id) => {
         });
     }
 }
+
 
 
 export { get_posts, create_post, update_post, delete_post, get_user_posts, get_specific_post, get_following_posts }

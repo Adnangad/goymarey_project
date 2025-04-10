@@ -11,6 +11,8 @@ const get_posts = async () => {
             include: {
                 user: {
                     select: {
+                        id: true,
+                        email: true,
                         name: true,
                         imageUrl: true,
                     }

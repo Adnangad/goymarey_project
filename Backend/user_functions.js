@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import CustomError from "./custom_errors.js";
+import { GraphQLError } from "graphql";
 
 const prisma = new PrismaClient();
 
@@ -61,6 +62,36 @@ const check_user = async (email, password) => {
     }
 
     return user;
+}
+
+//updates a users details
+const update_user = async (user_id, name, imageurl) => {
+    try {
+        const user = await get_user_by_id(user_id);
+        if (user) {
+            await prisma.user.update({
+                where: {
+                    id: parseInt(user.id),
+                },
+                data: {
+                    name: name,
+                    imageUrl: imageurl,
+                }
+            });
+            return {
+                success: true,
+                message: "Successfully unliked the post"
+            }
+        }
+    } catch (error) {
+        console.log("error");
+        throw new GraphQLError(`${error}`, {
+            extensions: {
+                code: "UNABLE_TO_GET_POSTS",
+                http: { status: 500 }
+            }
+        });
+    }
 }
 
 //removes a user from the db
@@ -169,4 +200,4 @@ const unfollow_smn = async (user_id, unfollow_id) => {
     }
 }
 
-export { get_users, get_user_by_id, create_user, check_user, delete_user, follow_smn, get_followers, get_following, unfollow_smn };
+export { get_users, get_user_by_id, create_user, check_user, delete_user, follow_smn, get_followers, get_following, unfollow_smn, update_user };

@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { GraphQLError } from "graphql";
-import CustomError from "./custom_errors.js";
 
 const prisma = new PrismaClient();
 

@@ -1,4 +1,4 @@
-import { get_users, get_user_by_id, create_user, check_user, delete_user, follow_smn, get_followers, get_following, unfollow_smn } from "./user_functions.js";
+import { get_users, get_user_by_id, create_user, check_user, delete_user, follow_smn, get_followers, get_following, unfollow_smn, update_user } from "./user_functions.js";
 import { get_posts, create_post, update_post, delete_post, get_specific_post, get_user_posts, get_following_posts } from "./post_functions.js";
 import { unlike_post, like_post, getLikes, liked_by } from "./like_functions.js";
 import { GraphQLError } from "graphql";
@@ -180,6 +180,10 @@ const root = {
     // Shows users who liked a post
     likedBy: async ({ post_id }) => {
         return await liked_by(post_id);
+    },
+    // Updates a  users details
+    updateUser: async ({ user_id, name, imageUrl}) => {
+        return await update_user(user_id, name, imageUrl);
     }
 }
 export default root;

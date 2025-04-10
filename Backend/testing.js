@@ -1,10 +1,13 @@
 async function test_apis() {
     const url = "http://localhost:4000/graphql";
     const query = `
-        mutation {
-          follow(user_id: "10", follow_id: "7") {
-            success
-            message
+        query {
+          user(id: "8") {
+            id
+            name
+            email
+            followersCount
+            followingCount
           }
         }
     `;
@@ -18,7 +21,7 @@ async function test_apis() {
       console.error(rez.errors);
     }
     else {
-      console.log(`The rez is: `, rez.data);
+      console.log(`The rez is: `, rez.data.user);
     }
 }
 test_apis();

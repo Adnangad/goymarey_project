@@ -3,6 +3,7 @@ import logo from '../static/logo.png';
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import ErrorPage from './Error.tsx';
 
 function App() {
   const [selected, setSelected] = useState('MALE');
@@ -12,6 +13,8 @@ function App() {
   const [dob, setDob] = useState('');
   const [confpass, setConfirm] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,17 +34,20 @@ function App() {
       setImageUrl(res.data.secure_url);
     } catch (err) {
       console.error("Upload error:", err);
-      alert("Image upload failed.");
+      setErrorMessage("Image upload failed.");
+      setShowError(true);
     }
   };
   async function register(e: React.FormEvent<HTMLFormElement>) {
     const url = "http://localhost:4000/graphql";
     e.preventDefault();
     if (confpass !== password) {
-      alert("Passwords do not match");
+      setErrorMessage("Passwords do not match");
+      setShowError(true);
     }
     else if (!email || !password || !dob || !username) {
-      alert("Please fill in all of the fields");
+      setErrorMessage("Please fill in all of the fields");
+      setShowError(true)
     }
     const date = new Date(dob);
     const query = ` mutation {
@@ -61,17 +67,21 @@ function App() {
       const rez = await response.json();
       if (rez.errors) {
         console.error("GraphQL errors:", rez.errors);
-        alert("Error: " + rez.errors[0]?.message || "Something went wrong.");
+        setErrorMessage("Error: " + rez.errors[0]?.message || "Something went wrong.");
+        setShowError(true)
       } else {
         console.log("Success:", rez.data);
         sessionStorage.setItem('user_data', JSON.stringify(rez.data));
         navigate("/home");
-        alert("User registered successfully!");
       }
     } catch (err) {
       console.error("Fetch error:", err);
-      alert("Network error. Try again later.");
+      setErrorMessage("Network error. Try again later.");
+      setShowError(true)
     }
+  }
+  if (showError) {
+    return <ErrorPage message={errorMessage} onClose={() => setShowError(false)} />;
   }
 
   return (

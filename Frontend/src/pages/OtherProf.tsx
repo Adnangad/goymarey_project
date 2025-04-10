@@ -1,8 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import OtherProf from './OtherProf.tsx';
-import { Atom } from 'react-loading-indicators';
 import "../App.css";
 import ErrorPage from './Error.tsx';
 
@@ -25,50 +23,18 @@ interface Post {
     created_at: string;
 }
 
-function Profile() {
-    let { profId } = useParams();
+export default function OtherProf() {
+    const { profId } = useParams();
     const user = JSON.parse(sessionStorage.getItem("user_data") || '{}');
-    const [userDet, setUserDet] = useState<User | null>(null);
-    const [loading, setLoading] = useState(false);
-
+    const [profDetails, setProfDet] = useState<User | null>(null);
     const [followers, setFollowers] = useState<User[]>([]);
     const [following, setFollowing] = useState<User[]>([]);
-    const [myPosts, setMyPosts] = useState<Post[]>([]);
     const [showError, setShowError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [otherUsers, setOtherUsers] = useState<User[]>([]);
-
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [myPosts, setMyPosts] = useState<Post[]>([]);
     const [activeTab, setActiveTab] = useState("posts");
 
-    async function deletePost(post_id: Number) {
-        try {
-            const url = "http://localhost:4000/graphql";
-            const query = `
-                mutation {
-                    deletePost(post_id: "${post_id}") {
-                        success
-                        message
-                    }
-                }
-            `;
-            const response = await fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ query }),
-            });
-            const rez = await response.json();
-            if (rez.errors) {
-                setErrorMessage(rez.errors[0]?.message || "Something went wrong.");
-                setShowError(true);
-            } else {
-                window.location.reload();
-            }
-        } catch (err) {
-            setErrorMessage("Network Error, Try Again Later.");
-            setShowError(true);
-        }
-
-    }
     async function unfollow(person_id: Number) {
         try {
             const url = "http://localhost:4000/graphql";
@@ -95,7 +61,7 @@ function Profile() {
             }
         } catch (err) {
             console.error("Fetch error:", err);
-            setErrorMessage("Network Error, Try Again Later");
+            setErrorMessage("Something went wrong with the server.");
             setShowError(true);
         }
     }
@@ -125,51 +91,13 @@ function Profile() {
             }
         } catch (err) {
             console.error("Fetch error:", err);
-            setErrorMessage("Network Error, Try again Later");
+            setErrorMessage("Something went wrong with the server");
             setShowError(true);
         }
     }
-
     useEffect(() => {
-        async function getInfo() {
-            try {
-                const url = "http://localhost:4000/graphql";
-                const query = `
-                    query {
-                        user(id: "${profId}"){
-                            id
-                            name
-                            email
-                            imageUrl
-                            followersCount
-                            followingCount
-                        }
-                    }
-                `;
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ query }),
-                });
-                const rez = await response.json();
-                if (rez.errors) {
-                    console.error("GraphQL errors:", rez.errors);
-                    setErrorMessage(rez.errors[0]?.message || "Something went wrong.");
-                    setShowError(true);
-                } else {
-                    setUserDet(rez.data.user);
-                    console.log(rez.data.user);
-                    if (!userDet) return <div>Loading...</div>;
-                }
-            } catch (err) {
-                console.error("Fetch error:", err);
-                setErrorMessage("Network Error");
-                setShowError(true);
-            }
-        }
         async function getMyposts() {
             try {
-                setLoading(true);
                 const url = "http://localhost:4000/graphql";
                 const query = `
                     query {
@@ -195,16 +123,13 @@ function Profile() {
                 }
             } catch (err) {
                 console.error("Fetch error:", err);
-                setErrorMessage("Network Error");
+                setErrorMessage("Something went wrong with the server.");
                 setShowError(true);
-            } finally {
-                setLoading(false);
             }
 
         }
         async function getfollowers() {
             try {
-                setLoading(true);
                 const url = "http://localhost:4000/graphql";
                 const query = `
                     query {
@@ -235,14 +160,11 @@ function Profile() {
                 console.error("Fetch error:", err);
                 setErrorMessage("Something went wrong with the server");
                 setShowError(true);
-            } finally {
-                setLoading(false);
             }
 
         }
         async function getfollowing() {
             try {
-                setLoading(true);
                 const url = "http://localhost:4000/graphql";
                 const query = `
                     query {
@@ -272,20 +194,20 @@ function Profile() {
                 console.error("Fetch error:", err);
                 setErrorMessage("Something went wrong with the server");
                 setShowError(true);
-            } finally {
-                setLoading(false);
             }
         }
-        async function otherUsers() {
+        async function getInfo() {
             try {
                 const url = "http://localhost:4000/graphql";
                 const query = `
                     query {
-                        users {
+                        user(id: "${profId}"){
                             id
                             name
                             email
                             imageUrl
+                            followersCount
+                            followingCount
                         }
                     }
                 `;
@@ -300,7 +222,9 @@ function Profile() {
                     setErrorMessage(rez.errors[0]?.message || "Something went wrong.");
                     setShowError(true);
                 } else {
-                    setOtherUsers(rez.data.users);
+                    setProfDet(rez.data.user);
+                    console.log(rez.data.user);
+                    if (!profDetails) return <div>Loading...</div>;
                 }
             } catch (err) {
                 console.error("Fetch error:", err);
@@ -308,30 +232,59 @@ function Profile() {
                 setShowError(true);
             }
         }
+        async function get_users_following() {
+            try {
+                const url = "http://localhost:4000/graphql";
+                const query = `
+                query {
+                  following(user_id: "${user.id}") {
+                    id
+                    name
+                    email
+                    imageUrl
+                  }
+                }
+            `;
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ query }),
+                });
+                const rez = await response.json()
+                if (rez.errors) {
+                    setErrorMessage(rez.errors[0]?.message || "Something went wrong.");
+                    setShowError(true);
+                }
+                else {
+                    const foll: User[] = rez.data.following;
+                    console.log(typeof (profId));
+                    foll.forEach((element) => {
+                        if (Number(element.id) === Number(profId)) {
+                            setIsFollowing(true);
+                            console.log("You are following them")
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error("Fetch error:", err);
+                setErrorMessage("Something went wrong with the server.");
+                setShowError(true);
+            }
+        }
+        getInfo();
+        get_users_following();
         getMyposts();
         getfollowers();
-        otherUsers();
         getfollowing();
-        getInfo();
     }, [profId]);
-
     const handleTabSwitch = (tab: string) => {
         setActiveTab(tab);
     };
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center h-screen bg-white">
-                <div className="flex flex-col items-center space-y-4">
-                    <Atom color="#33b8ff" size="large" text="Loading..." textColor="#33b8ff" />
-                </div>
-            </div>
-        );
-    }
     if (showError) {
         return <ErrorPage message={errorMessage} onClose={() => setShowError(false)} />;
     }
-    else if (profId === user.id) {
-        return (
+    return (
+        <>
             <div className="bg-blue-950 h-screen">
                 <div className='grid grid-cols-12 gap-10 pl-3 h-full'>
                     {/* Sidebar (Left Navigation) */}
@@ -365,18 +318,44 @@ function Profile() {
                         {/* Profile Header */}
                         <div className="p-8 bg-blue-200 flex justify-between items-center">
                             <div className="flex items-center">
-                                <img
-                                    src={userDet?.imageUrl}
-                                    alt={`${userDet?.name}'s profile`}
-                                    className="w-32 h-32 rounded-full object-cover"
-                                />
-                                <div className="ml-6">
-                                    <h2 className="text-3xl font-semibold">{userDet?.name}</h2>
-                                    <p className="text-lg text-gray-600">{userDet?.email}</p>
-                                    <div className="mt-4">
-                                        <span className="mr-4 font-medium">Followers: {userDet?.followersCount}</span>
-                                        <span className="font-medium">Following: {userDet?.followingCount}</span>
+                                {profDetails?.imageUrl ? (
+
+                                    <img src={profDetails.imageUrl} alt={`${profDetails.name}'s profile`} className="w-32 h-32 rounded-full object-cover" />
+                                ) : (
+                                    <div className="w-32 h-32 rounded-full bg-gray-300 flex items-center justify-center text-white">
+                                        {profDetails?.name}
                                     </div>
+                                )}
+                                <div className="ml-6">
+                                    <h2 className="text-3xl font-semibold">{profDetails?.name}</h2>
+                                    <p className="text-lg text-gray-600">{profDetails?.email}</p>
+                                    <div className="mt-4">
+                                        <span className="mr-4 font-medium">Followers: {profDetails?.followersCount}</span>
+                                        <span className="font-medium">Following: {profDetails?.followingCount}</span>
+                                    </div>
+                                    {isFollowing ? (
+                                        <div>
+                                            {profDetails && (
+                                                <button
+                                                    onClick={() => unfollow(profDetails.id)}
+                                                    className="px-10 py-2 rounded-3xl ml-160 cursor-pointer text-lg bg-blue-600 text-white hover:bg-red-600"
+                                                >
+                                                    Unfollow
+                                                </button>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            {profDetails && (
+                                                <button
+                                                    onClick={() => follow(profDetails.id)}
+                                                    className="px-10 py-2 rounded-3xl ml-160 cursor-pointer text-lg bg-blue-600 text-white hover:bg-green-600"
+                                                >
+                                                    Follow
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -407,7 +386,7 @@ function Profile() {
                         <div className="flex-1 overflow-hidden p-8 bg-gray-100">
                             {activeTab === "posts" && (
                                 <div className="flex flex-col">
-                                    <h3 className="text-xl font-semibold mb-4">My Posts</h3>
+                                    <h3 className="text-xl font-semibold mb-4">{profDetails?.name}'s Posts</h3>
                                     <div className="grid grid-cols-1 gap-4 max-h-60 overflow-y-auto">
                                         {myPosts.map((post) => (
                                             <div key={post.id} className="border p-4 rounded-lg shadow-md">
@@ -417,10 +396,6 @@ function Profile() {
                                                         <p className="font-medium">{post.content}</p>
                                                         <p className="text-sm text-gray-500">Date Posted: {post.created_at}</p>
                                                     </div>
-                                                    <div><button
-                                                        onClick={() => deletePost(post.id)}
-                                                        className="px-6 py-2 rounded-md ml-120 cursor-pointer text-lg bg-blue-600 text-white hover:bg-red-600">Delete Post
-                                                    </button></div>
                                                 </div>
                                             </div>
                                         ))}
@@ -432,7 +407,7 @@ function Profile() {
                                 <div className="flex flex-col">
                                     <div className="grid grid-cols-1 gap-4 max-h-79 overflow-y-auto">
                                         {followers.length === 0 ? (
-                                            <h3 className="text-xl font-semibold mb-4">You Have 0 Followers</h3>) : (
+                                            <h3 className="text-xl font-semibold mb-4">The user Has 0 Followers</h3>) : (
                                             followers.map((followr) => (
                                                 <div key={followr.id} className="border p-4 rounded-lg shadow-md">
                                                     <div className="flex items-center">
@@ -464,40 +439,7 @@ function Profile() {
                                 <div className="flex flex-col">
                                     <div className="grid grid-cols-1 gap-4 max-h-79 overflow-y-auto">
                                         {following.length === 0 ? (
-                                            <>
-                                                <h3 className="text-xl font-semibold mb-4">You are yet to follow someone, below are some suggestions</h3>
-                                                {otherUsers.filter((others) => others.id !== user.id).map((others) => (
-                                                    <div key={others.id} className="border p-4 rounded-lg shadow-md">
-                                                        <div className="flex items-center">
-                                                            <div className="flex-shrink-0">
-                                                                {others.imageUrl ? (
-                                                                    <Link to={`/profile/${others.id}`}>
-                                                                        <img src={others.imageUrl} alt={`${others.name}'s profile`} className="w-12 h-12 rounded-full object-cover" />
-                                                                    </Link>
-                                                                ) : (
-                                                                    <Link to={`/profile/${others.id}`}>
-                                                                        <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-white">
-                                                                            {others.name[0]}
-                                                                        </div>
-                                                                    </Link>
-                                                                )}
-                                                            </div>
-                                                            <div className="ml-4">
-                                                                <p className="font-medium">{others.name}</p>
-                                                                <p className="text-sm text-gray-500">{others.email}</p>
-                                                            </div>
-                                                            <div>
-                                                                <button
-                                                                    onClick={() => follow(others.id)}
-                                                                    className="px-6 py-2 rounded-md ml-140 cursor-pointer text-lg bg-blue-600 text-white hover:bg-green-600"
-                                                                >
-                                                                    Follow
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </>
+                                            <h3 className="text-xl font-semibold mb-4">The user Follows No One That You Follow</h3>
                                         ) : (
                                             following.map((follo) => (
                                                 <div key={follo.id} className="border p-4 rounded-lg shadow-md">
@@ -519,14 +461,6 @@ function Profile() {
                                                             <p className="font-medium">{follo.name}</p>
                                                             <p className="text-sm text-gray-500">{follo.email}</p>
                                                         </div>
-                                                        <div>
-                                                            <button
-                                                                onClick={() => unfollow(follo.id)}
-                                                                className="px-6 py-2 rounded-md ml-140 cursor-pointer text-lg bg-blue-600 text-white hover:bg-red-600"
-                                                            >
-                                                                Unfollow
-                                                            </button>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             ))
@@ -538,13 +472,6 @@ function Profile() {
                     </div>
                 </div>
             </div>
-        );
-    }
-    else {
-        return (
-            <OtherProf></OtherProf>
-        )
-    }
+        </>
+    )
 }
-
-export default Profile;

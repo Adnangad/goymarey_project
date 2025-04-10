@@ -2,11 +2,14 @@ import '../App.css'
 import logo from '../static/logo_2.png';
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import ErrorPage from './Error.tsx';
 
 function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showError, setShowError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const login_url = "http://localhost:4000/graphql";
     const navigate = useNavigate();
 
@@ -21,7 +24,8 @@ function Login() {
             }
         }`;
         if (!email || !password) {
-            alert("Please fill in all of the fields");
+            setErrorMessage("Please fill in all of the fields");
+            setShowError(true);
         }
         try {
             const response = await fetch(login_url, {
@@ -31,7 +35,8 @@ function Login() {
             });
             const rez = await response.json();
             if (rez.errors) {
-                alert("Error: " + rez.errors[0]?.message || "Something went wrong.");
+                setErrorMessage(rez.errors[0]?.message || "Something went wrong.");
+                setShowError(true);
             }
             else {
                 console.log("Success:", rez.data);
@@ -40,10 +45,13 @@ function Login() {
             }
         } catch (error) {
             console.error("Fetch error:", error);
-            alert("Network error. Try again later.");
+            setErrorMessage("Something went wrong with the server.");
+            setShowError(true);
         }
     }
-
+    if (showError) {
+        return <ErrorPage message={errorMessage} onClose={() => setShowError(false)} />;
+    }
     return (
         <>
             <div className='flex justify-center items-center h-screen bg-blue-500'>
